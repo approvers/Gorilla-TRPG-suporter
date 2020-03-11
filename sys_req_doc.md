@@ -1,3 +1,3 @@
-# (ŒÌ)ƒSƒŠƒ‰TRPGƒ}ƒl[ƒWƒƒ[—vŒ’è‹`‘
-# ‹@”\
-* [issue](https://github.com/brokenManager/Gorilla-TRPG-suporter/issues)Œ©‚ë(ƒJƒX)
+ï»¿# (æ•…)ã‚´ãƒªãƒ©TRPGãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼è¦ä»¶å®šç¾©æ›¸
+# æ©Ÿèƒ½
+* [issue](https://github.com/brokenManager/Gorilla-TRPG-suporter/issues)è¦‹ã‚(ã‚«ã‚¹)
