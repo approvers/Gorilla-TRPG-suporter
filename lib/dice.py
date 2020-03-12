@@ -19,14 +19,19 @@ class Dice:
         target : int
             目標値
         """
-        self.dice_formula = dice_formula
+        self.dice_formula = dice_formula.split(", ")
         self.target       = target
         self.dice_results = []
         self.result       = 0
         if not target is None:
             self.target = target
+        i = 0
+        for d in dice_formula:
+            dice_formula[i] = d[1:-1]
+            i += 1
         if not status is None:
-            self.dice_formula += "+ {}".format(status)
+            self.dice_formula.append("+")
+            self.dice_formula.append(str(status))
 
     def judge(self):
         dice_result = self.dice()
@@ -34,7 +39,7 @@ class Dice:
             return "成功:" + dice_result
         return "失敗:" + dice_result
 
-    def roll(self, dice_count, dice_max):
+    def _roll(self, dice_count, dice_max):
         """
         実際のダイス判定を行う
 
@@ -63,20 +68,24 @@ class Dice:
             ダイス判定の結果と出目をまとめた文字列
             またはエラー文
         """
-        self.result = 0
-        i = 0
-        next_calc = "+"
+        self._result_reset()
+        i           = 0
+        next_calc   = "+"
         for s in self.dice_formula:
             cache = 0
             if i % 2 == 0:
                 if "D" in s:
                     splitted_dice_formula = s.split("D")
+                    # Dの両サイドが自然数に変換できるか検証
                     if not splitted_dice_formula[0].isdecimal() or not splitted_dice_formula[1].isdecimal():
                         return "Error:1 can use only Natural number on dice formula"
                     dice_count = int(splitted_dice_formula[0])
                     dice_max   = int(splitted_dice_formula[1])
-                    self.roll(dice_count, dice_max)
+
+                    self._roll(dice_count, dice_max)
+
                 else:
+                    # 入力された値が自然数か検証
                     if not s.isdecimal():
                         return "Error:1 can use only Natural number on dice formula"
                     cache = int(s)
@@ -86,6 +95,9 @@ class Dice:
                     next_calc = s
                 else:
                     return "Error:2 can use only Addition or Subtraction"
+
             i += 1
         return str(self.result)+str(self.dice_results)
 
+    def _result_reset(self):
+        self.result = 0

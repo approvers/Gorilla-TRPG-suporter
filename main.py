@@ -82,7 +82,7 @@ async def on_message(message):
                         display_text += "・**{}**\n".format(player.name)  # ハードコーディング警察だ！！！
                     await channel.send(display_text)
 
-            elif user_command[0] == "status" or "stat":
+            elif user_command[0] in ["status", "stat"]:
                 if user_command[1] is None:
                     await channel.send(players[id].param)
                 else:
@@ -93,25 +93,26 @@ async def on_message(message):
                 target = None
 
                 if "力" in user_command:
-                    p = channel[id].get_status("力")
+                    p = players[id].get_status("力")
                     user_command.remove("力")
                 elif "筋力" in user_command:
-                    p = channel[id].get_status("筋力")
+                    p = players[id].get_status("筋力")
                     user_command.remove("筋力")
                 elif "パワー" in user_command:
-                    p = channel[id].get_status("パワー")
+                    p = players[id].get_status("パワー")
                     user_command.remove("パワー")
                 elif "野生" in user_command:
-                    p = channel[id].get_status("野生")
+                    p = players[id].get_status("野生")
                     user_command.remove("野生")
                 
                 if user_command[-1][0] == "(" and user_command[-1][-1] == ")":
                     if user_command[-1][1: -1].isdecimal():
                         target = int(user_command[-1][1:-1])
                         del user_command[-1]
-                    await channel.send("Error:3 can set only Natural Number to target")
-                    return 
-                dice = Dice(str(user_command), p, target)
+                    else:
+                        await channel.send("Error:3 can set only Natural Number to target")
+                        return 
+                dice = Dice(str(user_command)[1:-1], p, target)
                 if target is None:
                     await channel.send(dice.dice())
                 else:
