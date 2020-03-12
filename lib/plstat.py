@@ -35,6 +35,19 @@ class StatusManager:
         parameter: int
             実際のパラメーター 設定されていなければ None を返す
         """
+
+        # 日本語=> idコンバーター
+        if param == "力":
+            param = "chikara"
+        elif param == "筋力":
+            param = "kinryoku"
+        elif param == "野生":
+            param = "yasei"
+        elif param == "パワー":
+            param = "power"
+        elif param == "バナナ":
+            param = "banana"
+
         if not is_initial:
             if not param in self.param_initial:
                 raise ValueError("指定されたパラメーターは存在しません")
