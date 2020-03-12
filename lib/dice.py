@@ -23,6 +23,16 @@ class Dice:
         self.target       = target
         self.dice_results = []
         self.result       = 0
+        if not target is None:
+            self.target = target
+        if not status is None:
+            self.dice_formula += "+ {}".format(status)
+
+    def judge(self):
+        dice_result = self.dice()
+        if self.result >= self.target:
+            return "成功:" + dice_result
+        return "失敗:" + dice_result
 
     def roll(self, dice_count, dice_max):
         """
@@ -53,6 +63,7 @@ class Dice:
             ダイス判定の結果と出目をまとめた文字列
             またはエラー文
         """
+        self.result = 0
         i = 0
         next_calc = "+"
         for s in self.dice_formula:
