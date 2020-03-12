@@ -3,7 +3,7 @@ import discord
 import os
 
 from lib.plstat import *
-
+from lib.dice import Dice
 
 
 token = os.environ["TOKEN"]
@@ -87,6 +87,35 @@ async def on_message(message):
                     await channel.send(players[id].param)
                 else:
                     await channel.send(players[id].get_status(user_command[1]))
+            
+            elif "D" in user_command[0]:
+                p = None
+                target = None
 
+                if "力" in user_command:
+                    p = channel[id].get_status("力")
+                    user_command.remove("力")
+                elif "筋力" in user_command:
+                    p = channel[id].get_status("筋力")
+                    user_command.remove("筋力")
+                elif "パワー" in user_command:
+                    p = channel[id].get_status("パワー")
+                    user_command.remove("パワー")
+                elif "野生" in user_command:
+                    p = channel[id].get_status("野生")
+                    user_command.remove("野生")
+                
+                if user_command[-1][0] == "(" and user_command[-1][-1] == ")":
+                    if user_command[-1][1: -1].isdecimal():
+                        target = int(user_command[-1][1:-1])
+                        del user_command[-1]
+                    await channel.send("Error:3 can set only Natural Number to target")
+                    return 
+                dice = Dice(str(user_command), p, target)
+                if target is None:
+                    await channel.send(dice.dice())
+                else:
+                    await channel.send(dice.judge())
+                    
 
 client.run(token)
