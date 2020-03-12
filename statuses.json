@@ -1,0 +1,13 @@
+{
+	"test_enemy":{
+		"type": "enemy",
+		
+		"kinryoku": 5,
+		"power": 3,
+		"chikara": 2,
+		"yasei": 4,
+
+		"banana": 5,
+		"GP": 5
+	}
+}
