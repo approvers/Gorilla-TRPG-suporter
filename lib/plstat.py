@@ -1,41 +1,85 @@
 import discord
-import traceback
 from random import randint
 
-# !joinコマンド発行時にPlayerStatusインスタンスを生成してください。
-# ステータスを決めるコマンド(未定)が発行された時はmessageとそのコマンドを呼び出す文言より後をstr型をもつリストでインスタンスメソッド渡してください。
-# 引数はmessageを渡してください
+
 
 class StatusManager:
+    """
+    ゲーム内のオブジェクト(プレイヤー,敵,GM)をつくるための親クラス
+    直接このクラスのインスタンスを生成したりはしないでね♡
+    """
     def __init__(self):
-        self.param_initial = {"kinryoku":None,"power":None,"chikara":None,"yasei":None,"banana":5,"GP":5,"HP":None}
-        self.param = {"kinryoku":None,"power":None,"chikara":None,"yasei":None,"banana":5,"GP":5,"HP":None}
-    def get_status(self,param):
-        pass
+        """
+        初期化処理を行う
+        とりあえずすべてNoneの状態で param_initial param 辞書を宣言
+        """
+        param_none          = {"kinryoku":None,"power":None,"chikara":None,"yasei":None,"banana":5,"GP":5,"HP":None}
+        self.param_initial  = param_none
+        self.param          = param_none
+        self.is_gm          = False
+
+    def get_status(self,param,is_initial=False):
+        """
+        該当するステータス(現在値)を返してくれる
+        Parameters
+        ---------
+        param: str
+            取得したいパラメーターの名前
+        is_initial: bool
+            取得したいのが初期値かどうかTrueで初期値を返すことになる、デフォルト値はFalse
+        Returns
+        ---------
+        parameter: int
+            実際のパラメーター 設定されていなければ None を返す
+        """
+        if not is_initial:
+            if not param in self.param_initial:
+                raise ValueError("指定されたパラメーターは存在しません")
+            else:
+                return self.param_initial[param]
+        else:
+            if not param in self.param:
+                raise ValueError("指定されたパラメーターは存在しません")
+            else:
+                return self.param[param]
 
 
 
 class PlayerStatus(StatusManager):
     def __init__(self, message):
+        """
+        Playerの状態を司るPlayerStatusオブジェクトを生成する
+        !join 時に message を渡してこのクラスのインスタンスを生成してください
+        Parameters
+        ---------
+        message: discord.message.Message
+            discord.pyからもらえるやつ
+        """
         super().__init__()
+        self.type = "Player"
+        self.user = message.author
         self.id = message.author.id
         self.name = message.author.display_name
-        self.author = message.author
-        self.type = "Player"
     def set_status(self,message):
+        """
+        Playerの状態(初期状態)を定める
+        !set 時に message を渡してインスタンス関数を呼び出してください
+        Parameters
+        ---------
+        message: discord.message.Message
+            discord.pyからもらえるやつ
+        """
         user_params = message.content.split()
         user_params.pop(0)
         user_params = list(map(lambda x: int(x),user_params))
+
         if not len(user_params) == 4:
-            return "ValueError" #筋力、パワー、力、野生
-        if not set(user_params) == set([2, 3, 4, 5]):
+            return "ValueError"
+        if not {2, 3, 4, 5} == set(user_params):
             return "StatusError"
         self.param_initial["kinryoku"], self.param_initial["power"],self.param_initial["chikara"], self.param_initial["yasei"] = user_params
         self.param_initial["HP"] = self.param_initial["power"] * 3 + 10
         self.param = self.param_initial
-
-
-
         return "Success"
 
 

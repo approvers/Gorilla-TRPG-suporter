@@ -39,6 +39,12 @@ async def on_message(message):
             if user_command[0] == "hi":
                 await channel.send("Hi!")
 
+            elif user_command[0] == "help":
+                if not len(user_command) >= 2:
+                    await channel.send("ここにhelpのメッセージ")  # ハードコーディング警察だ！！！
+                else:
+                    await channel.send("各コマンドごとのhelpメッセージ\n流石にこれはjson化する")
+
             elif user_command[0] == "join":
                 if id in players:
                     await channel.send("{}さんはすでに参加を受け付けています！".format(players[id].name))  # ハードコーディング警察だ！！！
@@ -77,7 +83,10 @@ async def on_message(message):
                     await channel.send(display_text)
 
             elif user_command[0] == "status" or "stat":
-                await channel.send(players[id].param)
+                if user_command[1] is None:
+                    await channel.send(players[id].param)
+                else:
+                    await channel.send(players[id].get_status(user_command[1]))
 
 
 client.run(token)
