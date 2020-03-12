@@ -1,4 +1,5 @@
 import json
+import os
 from random import randint
 
 import discord
@@ -19,6 +20,7 @@ class StatusManager:
                       "yasei": None, "banana": 5, "GP": 5, "HP": None}
         self.param_initial = param_none
         self.param = param_none
+        self.name = ""
         self.is_gm = False
 
     def get_status(self, param, is_initial=False):
@@ -94,20 +96,36 @@ class EnemyStatus(StatusManager):
         # 念の為敵にも(たぶん)ユニークなidをもたせておく
 
     @classmethod
-    def read_from_json(cls, name, file_path="statuses.json"):
+    def read_from_json_dir(cls, dir_name):
+        enemy_statuses = []
+
+        if not dir_name.endswith(os.path.sep):
+            dir_name += os.path.sep
+
+        for name in os.listdir(dir_name):
+            if os.path.isfile(dir_name + name) and name.endswith(".json"):
+                enemy_statuses.append(
+                    EnemyStatus.read_from_json(dir_name + name))
+
+        return enemy_statuses
+
+    @classmethod
+    def read_from_json(cls, file_path):
         status = StatusManager()
 
         with open(file_path, mode="r") as f:
             json_raw = json.loads(f.read())
 
-        status.param_initial["kinryoku"] = json_raw[name]["kinryoku"]
-        status.param_initial["power"] = json_raw[name]["power"]
-        status.param_initial["chikara"] = json_raw[name]["chikara"]
-        status.param_initial["yasei"] = json_raw[name]["yasei"]
-        status.param_initial["banana"] = json_raw[name]["banana"]
-        status.param_initial["GP"] = json_raw[name]["GP"]
+        status.param_initial["name"] = json_raw["name"]
 
-        status.param_initial["HP"] = status.param_initial["power"] * 3 + 10
+        status.param_initial["kinryoku"] = json_raw["kinryoku"]
+        status.param_initial["power"] = json_raw["power"]
+        status.param_initial["chikara"] = json_raw["chikara"]
+        status.param_initial["yasei"] = json_raw["yasei"]
+        status.param_initial["banana"] = json_raw["banana"]
+        status.param_initial["GP"] = json_raw["GP"]
+
+        status.param_initial["HP"] = json_raw["HP"]
 
         status.param = status.param_initial.copy()
         return status
