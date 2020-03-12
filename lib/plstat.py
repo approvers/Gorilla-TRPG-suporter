@@ -1,7 +1,8 @@
 import discord
+from random import randint
 
 # !joinコマンド発行時にPlayerStatusインスタンスを生成してください。
-# ステータスを決めるコマンド(未定)が発行された時はそのコマンドを呼び出す文言以降をstr型をもつリストでインスタンスメソッド渡してください。
+# ステータスを決めるコマンド(未定)が発行された時はmessageとそのコマンドを呼び出す文言より後をstr型をもつリストでインスタンスメソッド渡してください。
 # 引数はmessageを渡してください
 
 class StatusManager:
@@ -10,9 +11,6 @@ class StatusManager:
     def get_status(self,param):
         pass
 
-    @classmethod
-    def get_player_names(cls):
-        pass
 
 
 class PlayerStatus(StatusManager):
@@ -22,8 +20,12 @@ class PlayerStatus(StatusManager):
         self.name = message.author.display_name
         self.type = "Player"
     def set_status(self,message):
+        pass
+
 
 
 class EnemyStatus(StatusManager):
     def __init__(self):
+        self.id = randint(100000000000000000, 599999999999999999)
         self.type = "Enemy"
+        # 念の為敵にも(たぶん)ユニークなidをもたせておく
