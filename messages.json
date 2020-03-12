@@ -1,12 +1,17 @@
 {
 	"commands": {
 		"help": "HelpMessageHere",
-		"joined":"{}さんはすでに参加を受け付けています！",
-		"already_joined": "{}さんの参加を受け付けました！",
+		"joined":"{}さんの参加を受け付けました！",
+		"already_joined": "{}さんはすでに参加を受け付けています！",
 		"quited": "{}さんの参加を取り消しました！",
 		"not_joined": "{}さんはゲームに参加していません！",
 		"please_join": "先に```!join```で参加登録してください",
-		"no_player": "参加登録している人はいません！"
+		"no_player": "参加登録している人はいません！",
+		"opened": "{}さんがGMとしてゲームをopenしました！参加する方は```!join```を実行してください！",
+		"already_opened": "ゲームはすでに{}さんGMの元openされています！",
+		"no_game_master": "ゲームマスターがいません！\n```!open```でゲームマスターになってください！",
+		"you_are_GM": "{}さんはGMです",
+		"who_is_gm": "{}さんがGMです"
 	},
 	"status": {
 		"ValueError": "渡されたステータスの数が間違っています！",
