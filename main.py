@@ -49,18 +49,17 @@ async def on_message(message):
 
             elif user_command[0] == "join":
                 if id in players:
-                    await channel.send(msg.get_message("commands","already_joined").format(players[id].name))
+                    await channel.send(msg.get_message("commands","already_joined",players[id].name))
                 else:
                     players[id] = PlayerStatus(message)
-                    print(msg.get_message("commands","joined"))
-                    await channel.send(msg.get_message("commands","joined").format(players[id].name))
+                    await channel.send(msg.get_message("commands","joined",players[id].name))
 
             elif user_command[0] == "quit":
                 if id in players:
-                    await channel.send(msg.get_message("commands","quited").format(players[id].name))
+                    await channel.send(msg.get_message("commands","quited", players[id].name))
                     players.pop(id)
                 else:
-                    await channel.send(msg.get_message("commands","not_joined").format(author.display_name))
+                    await channel.send(msg.get_message("commands","not_joined", format(author.display_name)))
 
             elif user_command[0] == "set":
                 if user_command[1] == "help":
@@ -82,7 +81,7 @@ async def on_message(message):
                 else:
                     display_text = msg.get_message("member","list")
                     for player in players.values():
-                        display_text += msg.get_message("member","player").format(player.name)
+                        display_text += msg.get_message("member","player",player.name)
                     await channel.send(display_text)
 
             elif user_command[0] == "status" or "stat":
