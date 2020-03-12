@@ -56,13 +56,12 @@ async def on_message(message):
             elif user_command[0] == "set":
                 if user_command[1] == "help":
                     await channel.send("```!set <筋力> <パワー> <力> <野生>```")  # ハードコーディング警察だ！！！
-                elif author in players:
+                elif id in players:
                     result = players[id].set_status(message)
                     if result == "ValueError":
                         await channel.send("ステータスの数が間違っています！")  # ハードコーディング警察だ！！！
                     elif result == "StatusError":
-                        await channel.send("ステータスの値が間違っています！")  # ハードコーディング警察だ！！！
-                        await channel.send("[2,3,4,5]すべてを一つずつどれかのステータスに振ってください。")  # ハードコーディング警察だ！！！
+                        await channel.send("ステータスの値が間違っています！\n[2,3,4,5]すべてを一つずつどれかのステータスに振ってください。")  # ハードコーディング警察だ！！！
                     elif result == "Success":
                         await channel.send("ステータスの設定が完了しました！") #ハードコーディング警察だ！！！
                 else:
@@ -76,6 +75,9 @@ async def on_message(message):
                     for player in players.values():  # ハードコーディング警察だ！！！
                         display_text += "・**{}**\n".format(player.name)  # ハードコーディング警察だ！！！
                     await channel.send(display_text)
+
+            elif user_command[0] == "status" or "stat":
+                await channel.send(players[id].param)
 
 
 client.run(token)
