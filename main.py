@@ -3,8 +3,8 @@ import discord
 import os
 
 
-first_channel = 687368620958941237  #ハードコーディング警察だ！！！
-token = "TOKEN HERE" #ハードコーディング警察だ！！！
+
+token = os.environ["TOKEN"]
 
 
 
@@ -14,8 +14,8 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-    channel = client.get_channel(first_channel)
-    await channel.send("ログインしました")  #ハードコーディング警察だ！！！
+    pass
+    # ここに起動時(Discord接続完了時)に実行したい処理を書こうね
 
 
 
