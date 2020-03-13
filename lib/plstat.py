@@ -92,13 +92,36 @@ class PlayerStatus(StatusManager):
         user_params = list(map(lambda x: int(x), user_params))
 
         if not len(user_params) == 4:
-            return "ValueError"
+            return "Error20: ValueError 渡されたステータスの数が間違っています！"
         if not {2, 3, 4, 5} == set(user_params):
-            return "StatusError"
-        self.param_initial["kinryoku"], self.param_initial["power"], self.param_initial["chikara"], self.param_initial["yasei"] = user_params
+            return "Error21: StatusError ステータスの値が間違っています！\n[2,3,4,5]すべてを一つずつどれかのステータスに振ってください。"
+        self.param_initial["kinryoku"], self.param_initial["power"],self.param_initial["chikara"], self.param_initial["yasei"] = user_params
         self.param_initial["HP"] = self.param_initial["power"] * 3 + 10
         self.param = self.param_initial
         return "Success"
+
+
+
+
+class GameMaster(StatusManager):
+    """
+    Playerの状態(初期状態)を定める
+    !open 時に message を渡してインスタンス関数を呼び出してください
+    Parameters
+    ---------
+    message: discord.message.Message
+    discord.pyからもらえるやつ
+    """
+
+    def __init__(self, message):
+        super().__init__()
+        self.is_gm = True
+        self.type = "GameMaster"
+        self.user = message.author
+        self.id = message.author.id
+        self.name = message.author.display_name
+
+
 
 
 class EnemyStatus(StatusManager):

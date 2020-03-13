@@ -8,6 +8,7 @@ from lib.dice import Dice
 
 
 token = os.environ["TOKEN"]
+game_master = None
 msg = JSONMessage()
 players = {}
 
@@ -27,6 +28,7 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
+    global game_master  #まじでこめん
     channel = message.channel
     author  = message.author
     id = message.author.id
@@ -47,16 +49,31 @@ async def on_message(message):
                 else:
                     await channel.send("各コマンドごとのhelpメッセージ\n流石にこれはjson化する")  # ハードコーディング警察だ！！！
 
-            elif user_command[0] == "join":
-                if id in players:
-                    await channel.send(msg.get_message("commands","already_joined",players[id].name))
+            elif user_command[0] == "open":
+                if list(map((lambda x: x.is_gm),players.values())).count(True) >= 1:
+                    await channel.send(msg.get_message("commands", "already_opened", game_master.display_name))
                 else:
-                    players[id] = PlayerStatus(message)
-                    await channel.send(msg.get_message("commands","joined",players[id].name))
+                    game_master = message.author
+                    players[id] = GameMaster(message)
+                    await channel.send(msg.get_message("commands", "opened", author.display_name))
+
+            elif user_command[0] == "join":
+                if id in players.keys():
+                    await channel.send(msg.get_message("commands","already_joined",players[id].name))
+                    if id == game_master.id:
+                        await channel.send(msg.get_message("commands", "you_are_GM", players[id].name))
+                else:
+                    if game_master is None:
+                        await channel.send(msg.get_message("commands","no_game_master"))
+                    else:
+                        players[id] = PlayerStatus(message)
+                        await channel.send(msg.get_message("commands","joined",players[id].name))
 
             elif user_command[0] == "quit":
                 if id in players:
                     await channel.send(msg.get_message("commands","quited", players[id].name))
+                    if players[id].is_gm:
+                        game_master = None
                     players.pop(id)
                 else:
                     await channel.send(msg.get_message("commands","not_joined", format(author.display_name)))
@@ -66,12 +83,10 @@ async def on_message(message):
                     await channel.send(msg.get_message("help","set"))
                 elif id in players:
                     result = players[id].set_status(message)
-                    if result == "ValueError":
+                    if result == "Success":
                         await channel.send(msg.get_message("status",result))
-                    elif result == "StatusError":
-                        await channel.send(msg.get_message("status",result))
-                    elif result == "Success":
-                        await channel.send(msg.get_message("status",result))
+                    else:
+                        await channel.send(result)
                 else:
                     await channel.send(msg.get_message("commands","please_join"))
 
@@ -85,11 +100,18 @@ async def on_message(message):
                     await channel.send(display_text)
 
             elif user_command[0] in ["status", "stat"]:
-                if user_command[1] is None:
+                if len(user_command) == 0:
                     await channel.send(players[id].param)
                 else:
                     await channel.send(players[id].get_status(user_command[1]))
-            
+
+            elif user_command[0] == "gm":
+                if game_master is None:
+                    await channel.send(msg.get_message("commands","no_game_master"))
+                else:
+                    await channel.send(msg.get_message("commands","who_is_gm",game_master.display_name))
+
+
             elif "D" in user_command[0]:
                 p = None
                 target = None
@@ -106,19 +128,20 @@ async def on_message(message):
                 elif "野生" in user_command:
                     p = players[id].get_status("野生")
                     user_command.remove("野生")
-                
+
                 if user_command[-1][0] == "(" and user_command[-1][-1] == ")":
                     if user_command[-1][1: -1].isdecimal():
                         target = int(user_command[-1][1:-1])
                         del user_command[-1]
                     else:
                         await channel.send("Error:3 can set only Natural Number to target")
-                        return 
+                        return
                 dice = Dice(str(user_command)[1:-1], p, target)
                 if target is None:
                     await channel.send(dice.dice())
                 else:
                     await channel.send(dice.judge())
+
                     
 
 client.run(token)
