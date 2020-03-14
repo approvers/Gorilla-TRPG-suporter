@@ -60,30 +60,30 @@ class MessageReceiver:
         await self.send(self._msg.get_message("commands", "opened", self._author.display_name))
         
     async def join(self):
-        if id in self._players_holder.get_players():
-            await self.send(self._msg.get_message("commands", "already_joined", self._players_holder.get_players()[id].name))
+        if self._id in self._players_holder.get_players():
+            await self.send(self._msg.get_message("commands", "already_joined", self._players_holder.get_players()[self._id].name))
             return
 
-        self._players_holder.get_players()[id] = PlayerStatus(self._message)
-        await self.send(self._msg.get_message("commands", "joined", self._players_holder.get_players()[id].name))
+        self._players_holder.get_players()[self._id] = PlayerStatus(self._message)
+        await self.send(self._msg.get_message("commands", "joined", self._players_holder.get_players()[self._id].name))
 
     async def quit(self):
-        if not id in self._players_holder.get_players():
+        if not self._id in self._players_holder.get_players():
             await self.send(self._msg.get_message("commands","not_joined", format(self._author.display_name)))
             return
 
-        await self.send(self._msg.get_message("commands","quited", self._players_holder.get_players()[id].name))
-        if self._players_holder.get_players()[id].is_gm:
+        await self.send(self._msg.get_message("commands","quited", self._players_holder.get_players()[self._id].name))
+        if self._players_holder.get_players()[self._id].is_gm:
             self._game_master_holder.set_master(None)
 
-        self._players_holder.get_players().pop(id)
+        self._players_holder.get_players().pop(self._id)
         
     async def set_status(self):
-        if not id in self._players_holder.get_players():
+        if not self._id in self._players_holder.get_players():
             await self.send(self._msg.get_message("commands", "please_join"))
             return
         
-        result = self._players_holder.get_players()[id].set_status(self._message)
+        result = self._players_holder.get_players()[self._id].set_status(self._message)
         if result == "Success":
             await self.send(self._msg.get_message("status", result))
             return
@@ -104,10 +104,10 @@ class MessageReceiver:
     async def status(self):
         players = self._players_holder.get_players()
         if len(self._user_command) == 0:
-            await self.send(players[id].param)
+            await self.send(players[self._id].param)
             return
 
-        await self.send(players[id].get_status(self._user_command[1]))
+        await self.send(players[self._id].get_status(self._user_command[1]))
 
     async def gm(self):
         game_master = self._game_master_holder.get_master()
@@ -142,18 +142,18 @@ class MessageReceiver:
         players = self._players_holder.get_players()
         
         if "力" in user_command:
-            parameter = players[id].get_status("力")
+            parameter = players[self._id].get_status("力")
             user_command.remove("力")
             return parameter
         if "筋力" in user_command:
-            parameter = players[id].get_status("筋力")
+            parameter = players[self._id].get_status("筋力")
             user_command.remove("筋力")
             return parameter
         if "パワー" in user_command:
-            parameter = players[id].get_status("パワー")
+            parameter = players[self._id].get_status("パワー")
             user_command.remove("パワー")
             return parameter
         if "野生" in user_command:
-            parameter = players[id].get_status("野生")
+            parameter = players[self._id].get_status("野生")
             user_command.remove("野生")
             return parameter
