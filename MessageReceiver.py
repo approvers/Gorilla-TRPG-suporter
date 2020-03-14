@@ -130,11 +130,6 @@ class MessageReceiver:
             target = int(user_command[-1][1:-1])
             del user_command[-1]
 
-        print("--------")
-        print(str(user_command))
-        print(parameter)
-        print(target)
-        print("--------")
         dice = Dice(str(user_command)[1:-1], parameter, target)
         if target is None:
             await self.send(dice.dice())
