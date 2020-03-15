@@ -21,4 +21,4 @@ class PlayersHolder(object):
         pass
 
     def get_players(self):
-        return PlayersHolder.__players
+        return self.__players

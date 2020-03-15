@@ -19,6 +19,6 @@ class GameMasterHolder(object):
         pass
 
     def get_master(self):
-        return GameMasterHolder.__game_master
+        return self.__game_master
     def set_master(self, user):
-        GameMasterHolder.__game_master = user
+        self.__game_master = user

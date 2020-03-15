@@ -20,4 +20,4 @@ class MessagesHolder(object):
         pass
 
     def get_message(self, scope, name, *kargs):
-        return MessagesHolder.__json_message.get_message(scope, name, *kargs)
+        return self.__json_message.get_message(scope, name, *kargs)
