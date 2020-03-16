@@ -14,7 +14,7 @@ class JSONMessage:
 
         :param file_path: メッセージ情報が格納されたJSON。通常指定する必要はない。
         """
-        with open(file_path, mode="r") as f:
+        with open(file_path, mode="r", encoding="utf-8") as f:
             self.json_msg = json.loads(f.read())
 
     def get_message(self, scope, name, *kargs):

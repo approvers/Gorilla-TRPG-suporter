@@ -26,8 +26,8 @@ class Dice:
         if not target is None:
             self.target = target
         i = 0
-        for d in dice_formula:
-            dice_formula[i] = d[1:-1]
+        for d in self.dice_formula:
+            self.dice_formula[i] = d[1:-1]
             i += 1
         if not status is None:
             self.dice_formula.append("+")
@@ -50,7 +50,7 @@ class Dice:
         dice_max: int
             ダイスの面の数
         """
-        for n in range(dice_count):
+        for _ in range(dice_count):
             r = randint(1, dice_max)
             self.dice_results.append(r)
             self.result += r
